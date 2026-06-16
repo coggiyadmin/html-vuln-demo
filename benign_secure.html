@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+  BENIGN-BASELINE / specificity probe for the HTML passes.
+  This page follows every HTML security best practice. The scanner MUST produce
+  ZERO security findings. Any finding is a FALSE POSITIVE for the html-* passes
+  (missing-sri, inline-event-handler, javascript-uri, missing-sandbox,
+  mixed-content, missing-noopener, autocomplete-sensitive, form-action-js).
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+  <!-- External script WITH Subresource Integrity + crossorigin -->
+  <script src="https://cdn.example.com/app.js"
+          integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.example.com/styles.css"
+        integrity="sha384-9ndCyUa6mDvLWufLF/B0vCkVNd0kqBNX2hZQ4TpQ5n2lQ7Qb0wQ1F8mWYx1QF8z"
+        crossorigin="anonymous">
+</head>
+<body>
+  <h1>Account</h1>
+
+  <!-- Sensitive inputs have autocomplete disabled -->
+  <form action="/login" method="post">
+    <input type="text" name="username" autocomplete="off">
+    <input type="password" name="password" autocomplete="off">
+    <button type="submit">Sign in</button>
+  </form>
+
+  <!-- External link with rel="noopener noreferrer" -->
+  <a href="https://partner.example.com" target="_blank" rel="noopener noreferrer">Partner</a>
+
+  <!-- Sandboxed iframe, https source -->
+  <iframe src="https://embed.example.com/widget" sandbox="allow-scripts"></iframe>
+
+  <!-- No inline handlers: behavior attached via addEventListener in an SRI'd script -->
+  <button id="refresh">Refresh</button>
+  <script src="https://cdn.example.com/handlers.js"
+          integrity="sha384-MmS0Z6Hl1nQ8oG7sJ2tT9bH3qP1rXkY8wL4cV6dN0eF2gH5jK7mP9rT1uW3xZ5a"
+          crossorigin="anonymous"></script>
+</body>
+</html>

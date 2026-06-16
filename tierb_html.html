@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- Tier-B HTML passes — exercise the 5 untested html-* rules. Each line is a real issue. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <!-- html-mixed-content (CWE-311): https page loading an http:// resource -->
+  <script src="http://cdn.example.com/lib.js"></script>
+  <link rel="stylesheet" href="http://cdn.example.com/app.css">
+</head>
+<body>
+  <!-- html-javascript-uri (CWE-79): javascript: URI in href -->
+  <a href="javascript:stealCookies()">click me</a>
+
+  <!-- html-form-action-javascript (CWE-79): javascript: in form action -->
+  <form action="javascript:exfiltrate()"><input name="q"><button>go</button></form>
+
+  <!-- html-missing-noopener (CWE-1022): target=_blank without rel=noopener -->
+  <a href="https://external.example.com" target="_blank">external link</a>
+
+  <!-- html-missing-sandbox (CWE-1021): iframe without sandbox attribute -->
+  <iframe src="https://widget.example.com/embed"></iframe>
+</body>
+</html>

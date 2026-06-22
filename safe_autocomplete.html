@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-autocomplete-sensitive (CWE-200).
+  Sensitive fields (password, credit-card, otp) set autocomplete to a safe value
+  ("off", "new-password", "one-time-code"). Non-sensitive fields may autocomplete
+  freely. Any html-autocomplete-sensitive finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <form action="/login" method="post">
+    <input type="text" name="username" autocomplete="username">
+    <input type="password" name="password" autocomplete="off">
+    <input type="password" name="new_password" autocomplete="new-password">
+    <input type="text" name="otp" inputmode="numeric" autocomplete="one-time-code">
+    <input type="text" name="cc-number" autocomplete="off">
+    <button type="submit">Sign in</button>
+  </form>
+</body>
+</html>

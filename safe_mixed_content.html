@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-mixed-content (CWE-311).
+  Every sub-resource (script, link, img, iframe) loads over https: or a
+  protocol-relative/relative path — no http:// resources. Any html-mixed-content
+  finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <script src="https://cdn.example.com/lib.js"
+          integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.example.com/app.css"
+        integrity="sha384-9ndCyUa6mDvLWufLF/B0vCkVNd0kqBNX2hZQ4TpQ5n2lQ7Qb0wQ1F8mWYx1QF8z"
+        crossorigin="anonymous">
+</head>
+<body>
+  <img src="https://img.example.com/banner.png" alt="banner">
+  <iframe src="https://embed.example.com/widget" sandbox="allow-scripts"></iframe>
+</body>
+</html>

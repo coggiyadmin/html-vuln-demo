@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-missing-noopener (CWE-1022).
+  Every target="_blank" link carries rel="noopener" (or noopener noreferrer),
+  preventing reverse-tabnabbing. Links without target="_blank" need no rel.
+  Any html-missing-noopener finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <a href="https://partner.example.com" target="_blank" rel="noopener noreferrer">Partner</a>
+  <a href="https://blog.example.com" target="_blank" rel="noopener">Blog</a>
+  <!-- same-tab navigation: rel not required -->
+  <a href="/about">About</a>
+</body>
+</html>

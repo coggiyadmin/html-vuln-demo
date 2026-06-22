@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-javascript-uri (CWE-79).
+  All href/src values are ordinary https:, relative, mailto: or #fragment URLs —
+  no "javascript:" URIs. Any html-javascript-uri finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <nav>
+    <a href="https://docs.example.com">Docs</a>
+    <a href="/account/settings">Settings</a>
+    <a href="#main">Skip to content</a>
+    <a href="mailto:support@example.com">Email support</a>
+  </nav>
+  <main id="main">
+    <img src="/static/logo.png" alt="logo">
+  </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-missing-sri (CWE-353).
+  Every cross-origin <script>/<link> carries a Subresource Integrity hash + crossorigin.
+  The scanner MUST produce ZERO findings here; any html-missing-sri finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="https://cdn.example.com/app.js"
+          integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"
+          crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.example.com/styles.css"
+        integrity="sha384-9ndCyUa6mDvLWufLF/B0vCkVNd0kqBNX2hZQ4TpQ5n2lQ7Qb0wQ1F8mWYx1QF8z"
+        crossorigin="anonymous">
+  <!-- same-origin scripts do not require SRI -->
+  <script src="/static/local.js"></script>
+</head>
+<body>
+  <h1>Catalog</h1>
+</body>
+</html>

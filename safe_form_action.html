@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-form-action-javascript (CWE-79).
+  Every <form action> targets an ordinary relative or https: endpoint — no
+  "javascript:" action. Any html-form-action-javascript finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <form action="/search" method="get">
+    <input name="q">
+    <button type="submit">Search</button>
+  </form>
+
+  <form action="https://api.example.com/subscribe" method="post">
+    <input type="email" name="email" autocomplete="email">
+    <button type="submit">Subscribe</button>
+  </form>
+
+  <!-- no action attribute → submits to current URL; not a javascript: action -->
+  <form method="post">
+    <input name="comment">
+    <button type="submit">Post</button>
+  </form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-inline-event-handler (CWE-79).
+  No onclick/onload/on* attributes; all behavior is attached via addEventListener
+  in a same-origin script. Any html-inline-event-handler finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <button id="refresh">Refresh</button>
+  <button id="save">Save</button>
+
+  <script src="/static/handlers.js"></script>
+  <script>
+    // Behavior bound programmatically — no inline event-handler attributes.
+    document.getElementById('refresh').addEventListener('click', () => location.reload());
+    document.getElementById('save').addEventListener('click', () => {
+      console.log('saved');
+    });
+  </script>
+</body>
+</html>

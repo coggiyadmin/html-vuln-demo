@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!--
+  SAFE / FP probe for html-missing-sandbox (CWE-1021).
+  Every <iframe> declares a restrictive sandbox attribute and loads over https.
+  Any html-missing-sandbox finding is a FALSE POSITIVE.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h1>Embeds</h1>
+  <iframe src="https://embed.example.com/widget" sandbox="allow-scripts"></iframe>
+  <iframe src="https://maps.example.com/view" sandbox="allow-scripts allow-same-origin"></iframe>
+  <!-- fully sandboxed (empty value = maximum restriction) -->
+  <iframe src="https://ads.example.com/unit" sandbox></iframe>
+</body>
+</html>

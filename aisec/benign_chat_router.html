@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<!-- TN — benign chat router; routes by an internal map, no untrusted text in a prompt. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const HANDLERS = { billing: () => 'Routing to billing.', support: () => 'Routing to support.' };
+function route(intent) { return (HANDLERS[intent] || (() => 'unknown'))(); }
+</script>
+</body></html>

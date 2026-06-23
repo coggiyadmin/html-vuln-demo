@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<!-- TN — benign read-only lookup; fixed catalog by exact key. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const CATALOG = { USD: 'US Dollar', EUR: 'Euro', JPY: 'Japanese Yen' };
+function currencyName(code) { return CATALOG[String(code).toUpperCase()] || 'unknown'; }
+</script>
+</body></html>

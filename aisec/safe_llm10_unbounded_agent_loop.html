@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<!-- SAFE mirror (OWASP LLM10) — bounded by a hard max-steps budget. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+async function agent(goal) {
+  for (let i = 0; i < 8; i++) {
+    const msg = await (await fetch('/chat', { method: 'POST', body: goal })).text();
+    if (msg.includes('DONE')) break;
+  }
+}
+</script>
+</body></html>

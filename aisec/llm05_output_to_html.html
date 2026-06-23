@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<!-- Improper Output Handling (OWASP LLM05) — model output assigned to innerHTML (XSS). TP. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+function renderAnswer(el, answer) { el.innerHTML = '<div>' + answer + '</div>'; } // SINK (LLM05->XSS)
+</script>
+</body></html>

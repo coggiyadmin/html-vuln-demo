@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<!-- SAFE mirror (OWASP LLM08) — retrieval scoped to the caller's tenant first. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const INDEX = [];
+function retrieve(tenant, query) { return INDEX.filter(d => d.tenant === tenant).map(d => d.text); }
+</script>
+</body></html>

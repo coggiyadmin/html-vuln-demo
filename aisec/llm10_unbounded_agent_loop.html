@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<!-- Unbounded Consumption (OWASP LLM10) — agent loop with no iteration cap. TP. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+async function agent(goal) {
+  while (true) { // SINK (LLM10): no max-steps guard
+    const msg = await (await fetch('/chat', { method: 'POST', body: goal })).text();
+    if (msg.includes('DONE')) return;
+  }
+}
+</script>
+</body></html>

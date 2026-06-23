@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<!-- SAFE mirror (OWASP LLM10) — input length capped before the call. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+async function summarize(t) {
+  if (t.length > 8000) throw new Error('input too large');
+  return fetch('/chat', { method: 'POST', body: JSON.stringify({ text: t, max_tokens: 512 }) });
+}
+</script>
+</body></html>

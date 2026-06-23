@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- Vector/Embedding FN (OWASP LLM08) — shared cache keyed only by query, not tenant. MISS. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const CACHE = {};
+function retrieve(tenant, query) {
+  if (CACHE[query]) return CACHE[query]; // SINK (LLM08 FN)
+  return (CACHE[query] = [tenant + ':' + query]);
+}
+</script>
+</body></html>

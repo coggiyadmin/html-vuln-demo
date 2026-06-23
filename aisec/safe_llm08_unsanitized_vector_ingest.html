@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- SAFE mirror (OWASP LLM08) — sanitized + size-bounded per tenant. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const INDEX = {};
+function ingest(tenant, text) {
+  const clean = text.replace(/\x00/g, '').slice(0, 20000);
+  (INDEX[tenant] = INDEX[tenant] || []).push(clean);
+}
+</script>
+</body></html>

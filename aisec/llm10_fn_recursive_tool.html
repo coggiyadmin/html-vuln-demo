@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- Unbounded Consumption FN (OWASP LLM10) — recursive tool re-invokes the model. MISS. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+async function expand(topic) {
+  const sub = await (await fetch('/chat', { method: 'POST', body: 'Sub of ' + topic })).text();
+  for (const l of sub.split('\n')) if (l.trim()) await expand(l.trim()); // SINK (recursive)
+  return sub;
+}
+</script>
+</body></html>

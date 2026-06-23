@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<!-- SAFE mirror — static heartbeat only; no sensitive source reaches network. -->
+<html lang="en"><head><meta charset="utf-8"><title>Safe exfil mirror</title></head>
+<body>
+<script>
+(function () {
+  fetch('https://api.internal.example.com/metrics', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event: 'heartbeat' })
+  });
+})();
+</script>
+</body></html>

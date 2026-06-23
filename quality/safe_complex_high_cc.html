@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- SAFE mirror — low CC helpers. -->
+<html lang="en"><head><meta charset="utf-8"></head>
+<body><script>
+function sign(n) { return n > 0 ? 'p' : n < 0 ? 'n' : 'z'; }
+function classify(a, b, kind) {
+  if (kind === 'x') return 'x' + sign(a) + sign(b);
+  if (kind === 'y') return a && b ? 'y_ok' : 'y_alt';
+  return 'default';
+}
+</script></body></html>

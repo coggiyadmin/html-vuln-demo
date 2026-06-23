@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- McCabe HIGH CC — embedded decision tree. -->
+<html lang="en"><head><meta charset="utf-8"></head>
+<body><script>
+function classify(a, b, c, d, kind) {
+  if (kind === 'x') {
+    if (a > 0) {
+      if (b > 0) {
+        if (c > 0) return d > 0 ? 'xppp' : 'xppn';
+        if (c < 0) return 'xpn';
+      } else if (b < 0) return 'xan';
+    } else if (a < 0) return 'xneg';
+  } else if (kind === 'y') {
+    return a && b ? 'y1' : 'y2';
+  }
+  return 'default';
+}
+</script></body></html>

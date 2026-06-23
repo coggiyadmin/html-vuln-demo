@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<!-- Excessive Agency (OWASP LLM06) — over-broad storage tool: model-chosen key, wildcard scope. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+function readTool(key) { return window.localStorage.getItem(key); }   // SINK (LLM06): any key
+function writeTool(key, val) { window.localStorage.setItem(key, val); }
+</script>
+</body></html>

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<!-- Provenance/Misinfo (OWASP LLM09) — fabricated API usage (hallucinated method). TP. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+async function secureToken(seed) {
+  // SINK (LLM09): SubtleCrypto has no secureDigest() — invented API presented as real
+  return window.crypto.subtle.secureDigest('SHA-256', new TextEncoder().encode(seed));
+}
+</script>
+</body></html>

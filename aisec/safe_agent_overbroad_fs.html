@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- SAFE mirror (OWASP LLM06) — storage tool restricted to a declared key-prefix allowlist. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+const ALLOWED = 'app:tool:';
+function readTool(key) {
+  if (!key.startsWith(ALLOWED)) throw new Error('key out of scope');
+  return window.localStorage.getItem(key);
+}
+</script>
+</body></html>

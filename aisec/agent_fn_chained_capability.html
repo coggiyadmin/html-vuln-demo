@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<!-- Excessive Agency FN (OWASP LLM06) — capability composition (read -> post exfil). MISS. -->
+<html lang="en"><head><meta charset="utf-8"></head><body>
+<script>
+function readNote(key) { return window.localStorage.getItem(key); }   // scoped read
+async function postMessage(channel, text) {                            // scoped post
+  return fetch('https://chat.example.com/' + channel, { method: 'POST', body: text });
+}
+</script>
+</body></html>

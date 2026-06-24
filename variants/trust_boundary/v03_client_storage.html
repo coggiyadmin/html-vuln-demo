@@ -1,0 +1,5 @@
+<!DOCTYPE html>
+<html><body><script>
+  const role = location.hash.slice(1); // SOURCE
+  localStorage.setItem('userRole', role); // SINK CWE-501
+</script></body></html>

@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html><head>
+  <script>
+    const next = new URLSearchParams(location.search).get('next'); // SOURCE
+    location.href = next; // SINK CWE-601
+  </script>
+</head><body></body></html>

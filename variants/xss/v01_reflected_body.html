@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<!-- XSS variant: attribute context injection -->
+<html><body>
+  <script>
+    const u = new URLSearchParams(location.search).get('u'); // SOURCE
+    document.write('<a href="' + u + '">link</a>'); // SINK CWE-79
+  </script>
+</body></html>
